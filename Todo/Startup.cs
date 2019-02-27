@@ -11,6 +11,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Todo.Models;
+using Swashbuckle.AspNetCore.Swagger;
 
 namespace Todo
 {
@@ -29,6 +30,16 @@ namespace Todo
             services.AddDbContext<TodoContext>(opt =>
                 opt.UseInMemoryDatabase("TodoList"));
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+
+            //Swagger
+            services.AddSwaggerGen(c=>
+            {
+                c.SwaggerDoc("v1", new Info
+                {
+                    Title = "Estudos Dotnet Core",
+                    Version = "v1"
+                });
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -38,6 +49,18 @@ namespace Todo
             {
                 app.UseDeveloperExceptionPage();
             }
+
+            // Enable middleware to serve generated Swagger as a JSON endpoint.
+            app.UseSwagger();
+
+            // Enable middleware to serve swagger-ui (HTML, JS, CSS, etc.), 
+            // specifying the Swagger JSON endpoint.
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "Estudos Api Dotnet");
+                c.RoutePrefix = string.Empty;
+            });
+
 
             app.UseMvc();
         }
